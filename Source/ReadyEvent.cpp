@@ -43,7 +43,7 @@ int RakNet::ReadyEvent::ReadyEventNodeComp( const int &key, ReadyEvent::ReadyEve
 		return 1;
 }
 
-STATIC_FACTORY_DEFINITIONS(ReadyEvent,ReadyEvent);
+STATIC_FACTORY_DEFINITIONS(ReadyEvent, ReadyEvent);
 
 ReadyEvent::ReadyEvent()
 {
@@ -337,7 +337,7 @@ void ReadyEvent::OnReadyEventForceAllSet(Packet *packet)
 		{
 			ren->eventStatus=ID_READY_EVENT_FORCE_ALL_SET;
 			PushCompletionPacket(ren->eventId);
-		}
+		}		
 	}
 }
 void ReadyEvent::OnReadyEventPacketUpdate(Packet *packet)
@@ -364,6 +364,7 @@ void ReadyEvent::OnReadyEventPacketUpdate(Packet *packet)
 			// If forced all set, doesn't matter what the new packet is
 			if (ren->eventStatus==ID_READY_EVENT_FORCE_ALL_SET)
 				return;
+			OnEventChanged(eventId, packet->data[0], packet->guid);
 			UpdateReadyStatus(readyIndex);
 			if (wasCompleted==false && IsEventCompletedByIndex(readyIndex))
 				PushCompletionPacket(readyIndex);
@@ -497,8 +498,12 @@ void ReadyEvent::UpdateReadyStatus(unsigned eventIndex)
 		{
 			ren->eventStatus=ID_READY_EVENT_SET;
 		}
-	}
+	}	
 	BroadcastReadyUpdate(eventIndex, false);
+	if (ren->eventStatus == ID_READY_EVENT_ALL_SET)
+	{
+		OnEventAllSet(eventIndex);
+	}	
 }
 void ReadyEvent::SendReadyUpdate(unsigned eventIndex, unsigned systemIndex, bool forceIfNotDefault)
 {
@@ -564,6 +569,18 @@ void ReadyEvent::PushCompletionPacket(unsigned eventId)
 	bs.Write(eventId);
 	rakPeerInterface->PushBackPacket(p, false);
 	*/
+}
+void RakNet::ReadyEvent::OnEventChanged(unsigned eventid, unsigned char val, RakNetGUID sender)
+{
+	// empty, overload
+	(void) eventid;
+	(void) val;
+	(void) sender;
+}
+void RakNet::ReadyEvent::OnEventAllSet(unsigned eventid)
+{
+	// empty, overload
+	(void) eventid;
 }
 #ifdef _MSC_VER
 #pragma warning( pop )

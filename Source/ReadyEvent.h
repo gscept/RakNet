@@ -203,6 +203,8 @@ protected:
 	virtual void OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason );
 	virtual void OnRakPeerShutdown(void);
 	
+	virtual void OnEventChanged(unsigned eventid, unsigned char msg, RakNetGUID sender);
+	virtual void OnEventAllSet(unsigned eventid);
 	void Clear(void);
 	/*
 	bool AnyWaitersCompleted(unsigned eventIndex) const;
