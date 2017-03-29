@@ -498,12 +498,12 @@ void ReadyEvent::UpdateReadyStatus(unsigned eventIndex)
 		{
 			ren->eventStatus=ID_READY_EVENT_SET;
 		}
+		else
+		{
+			OnEventAllSet(ren->eventId);
+		}
 	}	
-	BroadcastReadyUpdate(eventIndex, false);
-	if (ren->eventStatus == ID_READY_EVENT_ALL_SET)
-	{
-		OnEventAllSet(eventIndex);
-	}	
+	BroadcastReadyUpdate(eventIndex, false);		
 }
 void ReadyEvent::SendReadyUpdate(unsigned eventIndex, unsigned systemIndex, bool forceIfNotDefault)
 {
